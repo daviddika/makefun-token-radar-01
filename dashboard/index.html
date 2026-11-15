@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — pre-token protocols ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<a class="skip" href="#board">Skip to the board</a>
+<header class="top">
+  <div class="brand"><span class="mark" aria-hidden="true"></span><span class="brand-name">TOKEN RADAR</span><span class="brand-sub">pre-token protocol radar</span></div>
+  <div class="top-meta" id="meta"><span>Snapshot —</span><span>Model radar-2</span></div>
+</header>
+<main id="board">
+  <section class="lede">
+    <div>
+      <h1><span id="n-board">178</span> pre-token protocols, ranked by implied value</h1>
+      <p>Every protocol on this board records no token yet. Implied value is TVL times the
+      mcap/TVL ratio of protocols in the same category that already trade — a model estimate of
+      what a launch could be worth as a market cap, <strong>not a price and not a promise</strong>.
+      The watchlist is the floor; the early radar finds what sits below it.</p>
+      <p class="caveat">P, the launch score, is a relative ranking score, not a probability of
+      launching. No points program is confirmed for any protocol in this snapshot.</p>
+    </div>
+    <dl class="facts" id="facts"></dl>
+  </section>
+
+  <section class="top10" aria-labelledby="top10-h">
+    <div class="sec-head">
+      <h2 id="top10-h">Top 10 by expected value</h2>
+      <p>The analyst&rsquo;s ordering: implied value &times; launch score. Big and likely beats
+      big-but-unlikely and small-but-certain. Select a card for the full breakdown.</p>
+    </div>
+    <ol class="cards" id="top10"></ol>
+  </section>
+
+  <section class="controls" aria-label="Board controls">
+    <div class="field"><label for="q">Search</label>
+      <input type="search" id="q" placeholder="Name, slug, category or chain" aria-label="Search the board"></div>
+    <div class="field"><label for="category">Category</label>
+      <select id="category" aria-label="Filter by category"><option value="all">All categories</option></select></div>
+    <div class="field"><label for="sort">Sort by</label>
+      <select id="sort" aria-label="Sort the board">
+        <option value="implied">Rank — implied value</option>
+        <option value="score">Expected value (score)</option>
+        <option value="tvl">TVL</option>
+        <option value="growth">7-day growth</option>
+        <option value="age">Age with no token</option>
+      </select></div>
+    <div class="field"><span class="lbl" id="tab-lbl">Token status</span>
+      <div class="tabs" role="group" aria-labelledby="tab-lbl">
+        <button type="button" id="tab-pre" aria-pressed="true">Pre-token</button>
+        <button type="button" id="tab-live" aria-pressed="false">Live token</button>
+      </div></div>
+    <span class="count" id="count"></span>
+    <button type="button" class="button" id="clear">Clear filters</button>
+  </section>
+
+  <div id="boardWrap"></div>
+
+  <section class="panel method" id="method" aria-labelledby="method-h">
+    <h2 id="method-h">How the model works</h2>
+    <p class="sub">One function scores every protocol from the snapshot&rsquo;s own figures. No
+    protocol name is special-cased and no row is hand-picked.</p>
+    <div class="formula">
+      <p><b>Implied value</b> = round(TVL &times; ratio), where ratio is the median mcap/TVL of the
+      protocols in the same category that already trade.</p>
+      <p><b>Ratio rule.</b> 5+ comparables: the category median (HIGH confidence). 2&ndash;4: the
+      category median shrunk halfway to the global median (MEDIUM). 0&ndash;1: the global median
+      (LOW). The ratio is clipped to [0.01, 1.00]. The global median across 128 trading protocols
+      is 0.2138.</p>
+      <p><b>Launch score P</b> = 0.35 &times; size + 0.25 &times; growth + 0.20 &times; maturity +
+      0.20 &times; reach. Size is log TVL over the largest watchlist TVL ($2,754M); growth is the
+      7-day change winsorised to [&minus;20%, +20%]; maturity peaks at 90&ndash;730 days with no
+      token and falls after that; reach is chain count capped at 10. P runs 0.11&ndash;0.85.</p>
+      <p><b>Score (expected value)</b> = implied value &times; P, using the unrounded P. Rank
+      follows implied value, because the board&rsquo;s rank 1 must be its most valuable protocol;
+      score_rank is the analyst&rsquo;s ordering by score.</p>
+    </div>
+    <h3>Ratio by category</h3>
+    <div class="table-wrap"><table id="ratioTable">
+      <caption class="sub">One ratio per category, from the rows on this board. n is the number of
+      trading comparables behind it.</caption>
+      <thead><tr><th scope="col">Category</th><th scope="col">Comparables (n)</th><th scope="col">Ratio</th><th scope="col">Source</th><th scope="col">Confidence</th><th scope="col">Rows on board</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <h3>What this data cannot tell us</h3>
+    <ul class="cannot">
+      <li>No points programs, airdrop hints, docs, socials, funding rounds, team, governance forum or tokenomics draft. A protocol could have a points program live and this snapshot would look identical.</li>
+      <li>No user counts, volume, revenue or fees. TVL can be one whale; a $50M single-depositor vault and a $50M thousand-user DEX look the same here.</li>
+      <li>No FDV or supply, so no airdrop share is knowable from this file — and implied value is an implied market cap, not FDV.</li>
+      <li>No time series beyond the 7-day change: no 30/90-day trend, and no way to tell a spike (one protocol is up 4,448% in a week) from a trend.</li>
+      <li>Nothing after the snapshot date, 2026-11-14. Any launch, points program or TVL move after that is invisible.</li>
+    </ul>
+  </section>
+
+  <section class="panel cover" id="coverage" aria-labelledby="cover-h">
+    <h2 id="cover-h">Coverage: who is on the board, and who is not</h2>
+    <p id="cover-text">The board carries <b>40</b> watchlist protocols plus <b>138</b> early rows below
+    the $50M floor — <b>178</b> rows in all. The Live view sets aside the protocols that already
+    trade, showing the top 24 by market cap with their real values, never mixed into the ranking.</p>
+    <p>Left out by rule, not by judgement: protocols that already record a token; names ending in a
+    version marker (V2, v3, 1.2, &hellip;); the Bridge, Canonical Bridge, Liquid Staking, Liquid
+    Restaking, Restaked BTC and CEX categories; names containing a whole word wrapped, staked or
+    staking; and names beginning with an exchange name (Binance, Coinbase, Bybit, Kraken, Bitget,
+    OKX, Bitfinex, Gemini). Those rules reproduce the watchlist&rsquo;s own cleanliness test, minus
+    the floor — so the early radar is every clean pre-token protocol below $50M, with no TVL cut.</p>
+  </section>
+
+  <footer class="foot">
+    <p>Token Radar, model radar-2. Snapshot: DefiLlama protocol index, 2026-11-14. All figures are
+    from that frozen file; nothing after the snapshot date is visible to this model. Implied values
+    are order-of-magnitude estimates — within usable categories the spread is 5&ndash;20&times;, so
+    never read them as precise to three significant figures.</p>
+  </footer>
+</main>
+<dialog class="detail" id="detail" aria-labelledby="detail-title"></dialog>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
